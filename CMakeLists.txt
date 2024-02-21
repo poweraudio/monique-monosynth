@@ -10,6 +10,12 @@ project(MoniqueMonosynth VERSION 1.2.0 LANGUAGES C CXX ASM)
 option(MONIQUE_COPY_PLUGIN_AFTER_BUILD "Copy JUCE Plugins after built" OFF)
 option(MONIQUE_RELIABLE_VERSION_INFO "Update version info on every build (off: generate only at configuration time)" ON)
 
+option(LV2_ONLY "Build plugin only as LV2" OFF)
+if(LV2_ONLY)
+  set(MONIQUE_JUCE_FORMATS_OVERRIDE LV2 CACHE STRING "JUCE plugin formats")
+  set(MONIQUE_SKIP_CLAP ON CACHE BOOL "Don't build CLAP")
+endif()
+
 # Set ourselves up for fpic C++17 all platforms
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -43,6 +49,10 @@ if(BUILD_LV2)
   list(APPEND MONIQUE_JUCE_FORMATS LV2)
 endif()
 
+if(MONIQUE_JUCE_FORMATS_OVERRIDE)
+  set(MONIQUE_JUCE_FORMATS ${MONIQUE_JUCE_FORMATS_OVERRIDE})
+endif()
+
 message(STATUS "Building Monique in formats: ${MONIQUE_JUCE_FORMATS}" )
 
 juce_add_plugin(MoniqueMonosynth
@@ -74,10 +84,12 @@ juce_add_plugin(MoniqueMonosynth
   )
 
 
-clap_juce_extensions_plugin(TARGET MoniqueMonosynth
-  CLAP_ID "org.surge-synth-team.monique-monosynth"
-  CLAP_FEATURES instrument synthesizer "mono synth" basses leads
-  )
+if(NOT MONIQUE_SKIP_CLAP)
+  clap_juce_extensions_plugin(TARGET MoniqueMonosynth
+    CLAP_ID "org.surge-synth-team.monique-monosynth"
+    CLAP_FEATURES instrument synthesizer "mono synth" basses leads
+    )
+endif()
 
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC
