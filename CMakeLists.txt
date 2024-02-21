@@ -285,3 +285,20 @@ add_custom_command(TARGET code-quality-pipeline-checks
   COMMAND ${CMAKE_COMMAND} -E echo About to check clang-format using clang-format-12
   COMMAND git ls-files -- ${CLANG_FORMAT_GLOBS} | xargs clang-format-12 --dry-run --Werror
   )
+
+include(GNUInstallDirs)
+
+if(TARGET ${PROJECT_NAME}_Standalone)
+  install(TARGETS ${PROJECT_NAME}_Standalone DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
+
+foreach(format VST3 LV2)
+  if(TARGET ${PROJECT_NAME}_${format})
+    get_target_property(output ${PROJECT_NAME}_${format} JUCE_PLUGIN_ARTEFACT_FILE)
+    install(DIRECTORY ${output} DESTINATION ${CMAKE_INSTALL_LIBDIR}/$<LOWER_CASE:${format}>)
+  endif()
+endforeach()
+
+if(TARGET ${PROJECT_NAME}_CLAP)
+  install(TARGETS ${PROJECT_NAME}_CLAP DESTINATION ${CMAKE_INSTALL_LIBDIR}/clap)
+endif()
