@@ -1,3 +1,18 @@
+**PowerAudio fork of Monique**
+
+This fork of Monique has the following changes:
+
+* The plugin is built using [a fork of JUCE] that includes fixes for IBM Power.
+* Added installation rules so the plugin can be installed with
+  `cmake --install` or `make install`.
+* In the [`lv2-only`] branch, added CMake option `LV2_ONLY` to build the plugin
+  only as LV2.
+
+[a fork of JUCE]: https://github.com/poweraudio/JUCE
+[`lv2-only`]: https://github.com/poweraudio/monique-monosynth/tree/lv2-only
+
+---
+
 # Monique Mono-Synth
 
 Monique is a monophonic synth from Thomas Arndt which, in December 2021 became open source
