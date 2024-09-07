@@ -1,10 +1,7 @@
 # Hacky secret project 3
 
 trigger:
-- main
-
-pr:
-- main
+- main-disable
 
 variables:
   - group: mac-signing
@@ -216,7 +213,7 @@ jobs:
   
         mkdir -p releases
         
-        mv *.zip *.dmg *.exe *.tar.xz releases
+        mv *.zip *.dmg *.exe releases
         
         ls -l $(System.DefaultWorkingDirectory)/git_info/
         echo "## Monique Nightly Build" > releases/ReleaseNotes.md
